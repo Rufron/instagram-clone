@@ -18,7 +18,6 @@ class Post extends Model
         'hide_like_view'=>'boolean',
         'allow_commenting'=>'boolean',
     ];
-}
 
     function media () : MorphMany {
         return $this->morphMany( related: Media::class, name: 'mediable');
@@ -28,3 +27,6 @@ class Post extends Model
 
         return $this->belongsTo( related: User::class);
     }
+}
+
+

@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         Post::factory( count: 20)->create( attributes: ['type'=>'reel']);
+        Post::factory( count: rand(10,40))->create( attributes: ['type'=>'post']);
     }
 }

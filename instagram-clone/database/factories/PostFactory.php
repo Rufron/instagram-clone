@@ -25,7 +25,7 @@ class PostFactory extends Factory
             'location'=>fake()->city(),
             'allow_commenting'=>fake()->boolean(),
             'hide_like_view'=>fake()->boolean(),
-            'description'=>fake()->sentence(),
+            'type'=>'post',
         ];
     }
 

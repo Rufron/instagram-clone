@@ -28,31 +28,46 @@
         <div class="my-2">
             {{-- <x-video /> --}}
             <!-- Slider main container -->
-            <div x-init="
-            new Swiper($el,{
-            modules: [Navigation, Pagination],
+            <div x-init="new Swiper($el, {
+                modules: [Navigation, Pagination],
 
-            pagination: {
-                el: '.swiper-pagination',
-            },
+                pagination: {
+                    el: '.swiper-pagination',
+                },
 
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-            });
-
-
-            "
-            class="swiper">
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+            });" class="swiper">
                 <!-- Additional required wrapper -->
-                <div class="swiper-wrapper">
+                <ul x-cloak class="swiper-wrapper">
                     <!-- Slides -->
-                    <div class="swiper-slide"><x-video /></div>
-                    <div class="swiper-slide">Slide 2</div>
-                    <div class="swiper-slide">Slide 3</div>
+                    @foreach ($post->media as $file)
+
+                        <li class="swiper-slide">
+                            @switch($file->mime)
+                                @case('video/webm')
+                                    <x-video source="{{$file->url}}"/>
+                                @break
+
+                                @case('image')
+                                @break
+
+                                @default
+                            @endswitch
+                        </li>
+                    @endforeach
+
+
+                    <li class="swiper-slide"><img
+                            src="https://images.unsplash.com/photo-1620554600249-636b81e27699?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c291cmNlfGVufDB8fDB8fHww" />
+                    </li>
+                    <li class="swiper-slide"><img
+                            src="https://images.unsplash.com/photo-1630349575347-89fde96c7e4f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8c291cmNlfGVufDB8fDB8fHww" />
+                    </li>
                     ...
-                </div>
+                </ul>
                 <!-- If we need pagination -->
                 <div class="swiper-pagination"></div>
 
