@@ -6,7 +6,7 @@ use App\Livewire\Home;
 use App\Livewire\Profile\Reels;
 use App\Livewire\Reels as LivewireReels;
 
-Route::get('/', Home::class);
+Route::get('/', Home::class)->middleware('auth');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

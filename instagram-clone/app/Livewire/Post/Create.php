@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Post;
 
+use App\Models\Media;
+use App\Models\Post;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 use LivewireUI\Modal\ModalComponent;
 use Termwind\Components\Dd;
@@ -13,8 +16,8 @@ class Create extends ModalComponent
     public $media=[];
     public $description;
     public $location;
-    public $hide_like_view;
-    public $allow_commenting;
+    public $hide_like_view=false;
+    public $allow_commenting=false;
 
     public static function modalMaxWidth(): string
     {
@@ -22,13 +25,75 @@ class Create extends ModalComponent
     }
 
     function submit() {
-        dd([
-            $this->media,
-            $this->description,
-            $this->location,
-            $this->hide_like_view,
-            $this->allow_commenting,
+
+        // validate
+        $this->validate( rules: [
+            'media.*'=>'required|file|mimes:png,jpg,mp4,jpeg,mov|max:40000',
+            'allow_commenting'=>'boolean',
+            'hide_like_view'=>'boolean',
         ]);
+
+        // determine if reel or post
+        $type= $this->getPostType(media: $this->media);
+
+
+        // create post
+        $post = Post::create([
+
+            'user_id'=>auth()->User()->id,
+            'description'=>$this->description,
+            'location'=>$this->location,
+            'allow_commenting'=>$this->allow_commenting,
+            'hide_like_view'=>$this->hide_like_view,
+            'type'=>$type
+        ]);
+
+        // add media
+        foreach ($this->media as $key =>$media) {
+            // get mime type
+            $mime = $this->getMime($media);
+
+            // save to storage
+            $path= $media->store('media', 'public');
+
+            $url= url( path: Storage::url( path: $path));
+
+
+            // create media
+            Media::create([
+                'url'=>$url,
+                'mime'=>$mime,
+                'mediable_id'=>$post->id,
+                'mediable_type'=>Post::class
+
+            ]);
+
+            $this->reset();
+            $this->dispatch( event: 'close');
+
+
+
+        }
+    }
+
+    function getMime($media) : string {
+
+        if (str()->contains( needles: $media->getMimeType(), ignoreCase: 'video')) {
+            return 'video';
+        } else {
+            return 'image';
+        }
+    }
+
+    function getPostType($media) : string {
+
+    if (count($media)===1 && str()->contains( needles: $media[0]->getMimeType(), ignoreCase:  'video')) {
+    // if (count($media) === 1 && str()->contains(strtolower($media[0]->getMimeType()), 'video')) {
+        return 'reel';
+    } else {
+        return 'post';
+    }
+
     }
 
     public function render()

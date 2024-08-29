@@ -117,13 +117,18 @@
         </p>
 
         {{-- names and comment --}}
-        <div class="flex text-sm gap-2 font-medium">
+        {{-- <div class="flex text-sm gap-2 font-medium">
             <p><strong class="font-bold">{{ fake()->name }}</strong>Lorem ipsum dolor sit amet consectetur, adipisicing
                 elit. Neque, modi!</p>
+        </div> --}}
+
+        <div class="flex text-sm gap-2 font-medium">
+            <p><strong class="font-bold">{{ $post->user->name }}</strong>{{$post->description}}</p>
         </div>
 
+
         {{-- view post modal --}}
-        <button class="text-slate-500/90 text-sm font-medium"> View all 65 comments</button>
+        <button onclick="Livewire.dispatch('openModal', {component:'post.view.modal', arguments: {'post':{{$post->id}}}})" class="text-slate-500/90 text-sm font-medium"> View all 65 comments</button>
 
         {{-- leave comment --}}
         <form x-data="{ inputText: '' }"class="grid-grid-cols-12 items-center w-full"></form>
