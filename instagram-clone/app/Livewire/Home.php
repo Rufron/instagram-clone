@@ -28,7 +28,7 @@ class Home extends Component
     }
 
     function mount() {
-        $this->posts=Post::latest()->get();
+        $this->posts=Post::with('comments')->latest()->get();
     }
 
 

@@ -25,18 +25,17 @@ class Modal extends ModalComponent
     }
 
 
-    function mount()  {
+    function mount()
+    {
 
-        $this->post= Post::findOrFail($this->post);
+        $this->post = Post::findOrFail($this->post);
 
         #get url
-        $url= url('post/'.$this->post->id);
+        $url = url(path: 'post/' . $this->post->id);
 
         #push state using new livewwire v3 js helper
 
-        $this->js(expression:"history.pushState({},'','{$url}')");
-
-
+        $this->js(expression: "history.pushState({},'','{$url}')");
     }
 
     public function render()
